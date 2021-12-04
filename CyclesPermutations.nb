@@ -1,0 +1,944 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     38781,        936]
+NotebookOptionsPosition[     35633,        884]
+NotebookOutlinePosition[     36000,        900]
+CellTagsIndexPosition[     35957,        897]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["\<\
+Different Algorithms to Calculate Number of Cycles Given a Maximum Length \
+\>", "Title",
+ CellChangeTimes->{{3.783812898125078*^9, 
+  3.783813003566148*^9}},ExpressionUUID->"b6c55467-5524-4837-a649-\
+51a63d7db1d7"],
+
+Cell[CellGroupData[{
+
+Cell["1. The Problem- 100 Prisoner Puzzle", "Chapter",
+ CellChangeTimes->{{3.783812809144177*^9, 3.783812815275586*^9}, {
+  3.784134909731155*^9, 
+  3.7841349185797253`*^9}},ExpressionUUID->"d3d12f41-d6e0-4196-b756-\
+4dd3c8c2c5b7"],
+
+Cell["\<\
+In this project, I will calculate the best solution to a variation of the 100 \
+Prisoner Puzzle. In my example, 10 prisoners are given unique cards numbered \
+1 though 10. The Warden collects the cards and shuffles them and randomly \
+puts each one in a numbered box from 1 though 10. He tells each of the \
+prisoners that they have 5 attempts to find their original card. If any \
+prisoner fails to find their card, then all of them will be held for a life \
+sentence instead of 1 month for a small misdemeanor. The question is the \
+following: what is the best strategy for the prisoners to maximise their \
+success?\
+\>", "Text",
+ CellChangeTimes->{{3.7841352681865883`*^9, 3.784135317745398*^9}, {
+  3.7841355856798563`*^9, 3.784135594064725*^9}, {3.7841356258745737`*^9, 
+  3.784135892512269*^9}, {3.784137713968195*^9, 
+  3.784137731950034*^9}},ExpressionUUID->"e271fe11-ba92-45df-bdd9-\
+1404205cb322"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"(", ".5", ")"}], "^", "10"}], "\[IndentingNewLine]", 
+ RowBox[{"1", "-", "%"}]}], "Input",
+ CellChangeTimes->{{3.784135898794611*^9, 3.784135913736952*^9}},
+ CellLabel->"In[1]:=",ExpressionUUID->"5fa06b41-f06a-4021-8316-3371a722993f"],
+
+Cell[TextData[{
+ "If one prisoner has 5 attempts to choose 10 cards, the probability that he \
+will find his card is ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox["5", "10"], "=", 
+    RowBox[{
+     FractionBox["1", "2"], "=", ".5"}]}], TraditionalForm]],ExpressionUUID->
+  "86a63171-323a-40db-876b-db76a967c684"],
+ ". The probability for all 10 prisoners to find their card using random \
+guessing is ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox[".5", "10"], TraditionalForm]],ExpressionUUID->
+  "6b0a9c60-98b1-4430-bb8e-3dadb2a46ac1"],
+ ", creating a 0.0976563 % chance of success and a 99.9023 % chance of \
+failure. "
+}], "Text",
+ CellChangeTimes->{{3.784135922891569*^9, 3.784135966329019*^9}, {
+  3.7841360379667473`*^9, 3.784136158615885*^9}, {3.784136198420974*^9, 
+  3.7841362708617*^9}},ExpressionUUID->"21db802b-e6d4-444f-b733-f4cfb85d469c"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"l", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7", ",", "8",
+      ",", "9", ",", "10"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lc", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "10", ",", "4", ",", "7", ",", "3", ",", "6", ",", "9", ",", "2", ",", 
+     "8", ",", "5", ",", "1"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"PermutationCycles", "[", "lc", "]"}]}], "Input",
+ CellChangeTimes->{{3.784137400057843*^9, 3.7841374596317244`*^9}, {
+  3.784137552467985*^9, 3.784137574271117*^9}},
+ CellLabel->"In[3]:=",ExpressionUUID->"50d8612a-ad40-4067-b579-a6a11b31ccd7"],
+
+Cell["\<\
+The most successful strategy occurs when the prisoners choose the box that \
+corresponds to their card number. Then, they either have found their card or \
+follow the trail of cards to their original card. In the above example, if \
+someone has a card number of 3, they will go to the designated box and find \
+7. The seventh box has card 2. The second box has card 4. Finally, the fourth \
+box has card 3. The prisoner has found their card in less than 5 attempts. \
+Essentially, if the prisoner follows the trail of cards with the \
+corresponding boxes, they will find their original card if the length of the \
+cycle is less than or equal to the number of attempts. For all the prisoners \
+to be successful, the maximum cycle length must be less than the number of \
+attempts. \
+\>", "Text",
+ CellChangeTimes->{{3.7841376229195642`*^9, 3.784137630633688*^9}, {
+  3.784137686126315*^9, 3.784137707782954*^9}, {3.784137739635001*^9, 
+  3.784137908044757*^9}, {3.78413816206236*^9, 
+  3.784138288891138*^9}},ExpressionUUID->"b191de58-37bc-48d7-a9c5-\
+001b24ac63c3"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["2. Brute Force method", "Chapter",
+ CellChangeTimes->{{3.783812823100893*^9, 
+  3.783812833779209*^9}},ExpressionUUID->"34014d2d-cb9f-4c98-982d-\
+1631e6d8a9fd"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"Perm10", "=", 
+    RowBox[{"Permutations", "[", 
+     RowBox[{"{", 
+      RowBox[{
+      "1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7", ",", 
+       "8", ",", "9", ",", "10"}], "}"}], "]"}]}], ";", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"combo", "[", "l_", "]"}], ":=", 
+    RowBox[{"Block", "[", 
+     RowBox[{
+      RowBox[{"{", "t", "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"t", "=", 
+        RowBox[{"PermutationCycles", "[", "l", "]"}]}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"t", "=", 
+        RowBox[{"List", "@@", "t"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"t", "=", 
+        RowBox[{"Map", "[", 
+         RowBox[{"Length", ",", "t", ",", 
+          RowBox[{"{", 
+           RowBox[{"-", "2"}], "}"}]}], "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"Max", "[", 
+        RowBox[{"Flatten", "[", "t", "]"}], "]"}]}]}], "]"}]}], ";", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Count", "[", 
+    RowBox[{
+     RowBox[{"combo", " ", "/@", " ", "Perm10"}], ",", 
+     RowBox[{"u_", "/;", 
+      RowBox[{"u", "\[LessEqual]", "5"}]}]}], "]"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Length", "[", "Perm10", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"%%", "[", 
+    RowBox[{"[", "2", "]"}], "]"}], "/", "%"}], "//", "N"}]}], "Input",
+ CellChangeTimes->{{3.783813022770116*^9, 3.783813023040639*^9}, {
+  3.7838159148997593`*^9, 3.783815918716291*^9}, {3.7838948367622223`*^9, 
+  3.783894848082378*^9}, {3.783898702001696*^9, 3.783898707258924*^9}, {
+  3.784138301211103*^9, 3.7841383149863453`*^9}, {3.7841383587017517`*^9, 
+  3.784138359145508*^9}},
+ CellLabel->"In[6]:=",ExpressionUUID->"41ef87c5-440f-4f57-9d27-184d62b9c773"],
+
+Cell[BoxData[
+ RowBox[{"10", "!"}]], "Input",
+ CellLabel->"In[9]:=",ExpressionUUID->"233b6719-0260-4445-9df7-d462cfd948c7"],
+
+Cell[TextData[{
+ "In the method used above, all the possible permutations of 10 are \
+calculated and run though a blocked function called combo. The combo function \
+finds all the cycles in  every permutation, removes the Cycles[] notation, \
+replaces each cycle with its length, and collapses the maximum of each list \
+of cycle lengths into a single list. Count finds the number of how many \
+maximum cycle lengths are less than 5. There are 1285920 permutations with a \
+maximum cycle length of 5 or less. The length of the original set of 10 \
+permutations is 3628800 or 10 factorial. The probability that a shuffle of \
+cards in the boxes will form optimally is ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox["1285920", "3628800"], "="}], TraditionalForm]],
+  ExpressionUUID->"3cdae8e7-5168-4fca-8ed3-e2372498d506"],
+ " 0.354365. Essentially, around 35.44% of the time, all the prisoners will \
+face less prison time using this strategy, creating a large improvement over \
+random guessing. The main problem with this code is that it is \
+computationally expensive. "
+}], "Text",
+ CellChangeTimes->{{3.784138683963195*^9, 3.784138758245769*^9}, {
+  3.784138895565258*^9, 3.784138903058844*^9}, {3.784138955964842*^9, 
+  3.784139367290537*^9}, {3.7841395110126667`*^9, 3.784139543151087*^9}, {
+  3.784401469996776*^9, 
+  3.784401472620591*^9}},ExpressionUUID->"1af69812-b8fd-429d-bfbc-\
+7ed99f18a6de"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["3. Faster Method with logic", "Chapter",
+ CellChangeTimes->{{3.783812841026684*^9, 3.783812849094805*^9}, 
+   3.783813044281649*^9, {3.783816398723051*^9, 
+   3.783816412573698*^9}},ExpressionUUID->"f8b59f90-a3c9-40f2-9de0-\
+11fab9f34aaa"],
+
+Cell[BoxData[{
+ RowBox[{"Timing", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"i", "=", 
+    RowBox[{"IntegerPartitions", "[", "10", "]"}]}], ";", 
+   "\[IndentingNewLine]", 
+   RowBox[{"s", "=", 
+    RowBox[{"Select", "[", 
+     RowBox[{"i", ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"First", "[", "#", "]"}], "\[LessEqual]", "5"}], "&"}]}], 
+     "]"}]}], ";", "\[IndentingNewLine]", 
+   RowBox[{"ip", "=", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"Map", "[", 
+       RowBox[{
+        RowBox[{"Count", "[", "n", "]"}], ",", "s", ",", 
+        RowBox[{"{", 
+         RowBox[{"-", "2"}], "}"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"n", ",", "1", ",", "5"}], "}"}]}], "]"}]}], ";", 
+   "\[IndentingNewLine]", 
+   RowBox[{"it", "=", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"Map", "[", 
+       RowBox[{
+        RowBox[{"Count", "[", "n", "]"}], ",", "i", ",", 
+        RowBox[{"{", 
+         RowBox[{"-", "2"}], "}"}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"n", ",", "1", ",", "10"}], "}"}]}], "]"}]}], ";", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Tp", "=", 
+    RowBox[{
+     RowBox[{"Transpose", "[", "ip", "]"}], "!"}]}], ";", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Tt", "=", 
+    RowBox[{
+     RowBox[{"Transpose", "[", "it", "]"}], "!"}]}], ";", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Total", "[", 
+    RowBox[{
+     RowBox[{"10", "!"}], "/", 
+     RowBox[{"(", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"Times", "@@@", "s"}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"Times", "@@@", "Tp"}], ")"}]}], ")"}]}], "]"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Total", "[", 
+  RowBox[{
+   RowBox[{"10", "!"}], "/", 
+   RowBox[{"(", 
+    RowBox[{
+     RowBox[{"(", 
+      RowBox[{"Times", "@@@", "i"}], ")"}], 
+     RowBox[{"(", 
+      RowBox[{"Times", "@@@", "Tt"}], ")"}]}], ")"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"%%", "[", 
+    RowBox[{"[", "2", "]"}], "]"}], "/", "%"}], "//", "N"}]}], "Input",
+ CellChangeTimes->{{3.7838987408149567`*^9, 3.783898744651555*^9}, {
+  3.783899806350453*^9, 3.783899809296328*^9}, {3.7841385972398367`*^9, 
+  3.7841386054622707`*^9}, {3.784225248249338*^9, 3.784225257137177*^9}, {
+  3.784227009407097*^9, 3.784227017065378*^9}},
+ CellLabel->"In[10]:=",ExpressionUUID->"2b05e857-ab50-40a3-9de5-70a5e06720c7"],
+
+Cell["\<\
+The end result of this method is the same, but the time required is \
+significantly less. On average, I was seeing a 1,799,720% improvement from \
+the brute force method running both inputs on a fresh kernel. 
+The lengths of cycles of any permutation of 10, will sum to 10. \
+\>", "Text",
+ CellChangeTimes->{{3.78413949400317*^9, 3.784139501380351*^9}, {
+  3.784139552813439*^9, 3.784139570547393*^9}, {3.7841396138738737`*^9, 
+  3.7841396923376513`*^9}, {3.784256700220684*^9, 
+  3.784256797966099*^9}},ExpressionUUID->"3de9150a-24eb-48d0-bf86-\
+a808b6994adc"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"l", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "1", ",", "2", ",", "3", ",", "4", ",", "5", ",", "6", ",", "7", ",", "8",
+      ",", "9", ",", "10"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"lc", "=", 
+   RowBox[{"{", 
+    RowBox[{
+    "10", ",", "4", ",", "7", ",", "3", ",", "6", ",", "9", ",", "2", ",", 
+     "8", ",", "5", ",", "1"}], "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"PermutationCycles", "[", "lc", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"List", "@@", "%"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Map", "[", 
+   RowBox[{"Length", ",", "%", ",", 
+    RowBox[{"{", 
+     RowBox[{"-", "2"}], "}"}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Total", "[", 
+   RowBox[{"%", "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "]"}], "+", "1", 
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+    "for", " ", "the", " ", "cycle", " ", "length", " ", "of", " ", "1"}], 
+    ",", " ", 
+    RowBox[{
+    "which", " ", "in", " ", "this", " ", "case", " ", "was", " ", "8"}]}], 
+   "*)"}]}]}], "Input",
+ CellChangeTimes->{{3.784137400057843*^9, 3.7841374596317244`*^9}, {
+  3.784137552467985*^9, 3.784137574271117*^9}, {3.784139716070665*^9, 
+  3.7841398780273523`*^9}},
+ CellLabel->"In[13]:=",ExpressionUUID->"b317a245-33f0-4de4-b224-8ab110c7e788"],
+
+Cell[TextData[{
+ "I am using the following formula for every permutation: ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{
+    FractionBox[
+     RowBox[{"10", "!"}], 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{
+       "Product", " ", "of", " ", "the", " ", "cycle", "  ", "lengths"}], 
+       ")"}], "*", 
+      RowBox[{"(", 
+       RowBox[{
+       "Factorial", " ", "of", " ", "the", " ", "count", " ", "of", " ", 
+        "repreated", " ", "cycle", " ", "lengths"}], ")"}], "  "}]], "=", 
+    RowBox[{
+    "Number", " ", "of", " ", "Permutations", " ", "meeting", " ", "the", " ",
+      "selection", " ", "critera", " "}]}], TraditionalForm]],
+  FormatType->"TraditionalForm",ExpressionUUID->
+  "ee80b5d6-fc42-4178-af33-1fe6336bf6c7"],
+ "."
+}], "Text",
+ CellChangeTimes->{{3.784139907806663*^9, 3.784139942411684*^9}, {
+  3.7842297642413063`*^9, 3.784229801835703*^9}, {3.784229841920259*^9, 
+  3.7842298756727962`*^9}, {3.784230002546587*^9, 3.784230092339675*^9}, {
+  3.784230165014161*^9, 
+  3.784230217370278*^9}},ExpressionUUID->"333ec711-9785-4ec8-b183-\
+370ddb62a32f"]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["4. Further Analysis using the different methods", "Chapter",
+ CellChangeTimes->{{3.783812863255762*^9, 
+  3.783812883859069*^9}},ExpressionUUID->"6237f3f4-8812-4f88-a1a9-\
+cdaa5da66f30"],
+
+Cell[BoxData[{
+ RowBox[{"i", ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Perm10", ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"combo", "[", "l", "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.784224606527952*^9, 3.784224649560965*^9}, {
+  3.784224943272995*^9, 3.784224964923291*^9}, {3.784226293175597*^9, 
+  3.7842262934379187`*^9}, {3.784226347835382*^9, 3.784226348055538*^9}},
+ CellLabel->"In[19]:=",ExpressionUUID->"2aaf367d-39ad-44ed-b9f9-8e3bf5c5c052"],
+
+Cell["\<\
+The two chunks of inputs below use the brute force method. The input takes a \
+long time to calculate, highlighting the problem with this method. The \
+manipulate is barely usable and insightful on most machines. The table is \
+more useful for this method but also takes a long time to calculate. However, \
+the code required for repeated calculations of this method is much simpler \
+due to the combo function. \
+\>", "Text",
+ CellChangeTimes->{{3.784230300532386*^9, 3.784230376203416*^9}, {
+  3.7842304259359818`*^9, 
+  3.784230500013021*^9}},ExpressionUUID->"9ef92831-3254-4a60-a141-\
+220d9b64683e"],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", 
+  RowBox[{
+   RowBox[{"ControlActive", "[", 
+    RowBox[{"\"\<Calculating\>\"", ",", 
+     RowBox[{"Count", "[", 
+      RowBox[{
+       RowBox[{"combo", " ", "/@", " ", "Perm10"}], ",", 
+       RowBox[{"u_", "/;", 
+        RowBox[{"u", "\[LessEqual]", "n"}]}]}], "]"}]}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"n", ",", "5", ",", "\"\<Maxmium cycle length\>\""}], "}"}], 
+     ",", "1", ",", "10", ",", "1"}], "}"}], ",", 
+   RowBox[{"ContinuousAction", "\[Rule]", "False"}], ",", 
+   RowBox[{"SaveDefinitions", "\[Rule]", "True"}], ",", 
+   RowBox[{
+   "FrameLabel", "\[Rule]", " ", "\"\<Number of Permutations of 10\>\""}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{
+  3.783773787160577*^9, {3.783773883982204*^9, 3.78377391052687*^9}, {
+   3.783773942220879*^9, 3.78377398741706*^9}, {3.7838079086041594`*^9, 
+   3.783807912234722*^9}, {3.783807957393149*^9, 3.783807962513886*^9}, {
+   3.783808009331958*^9, 3.783808034724979*^9}, {3.7838081473298683`*^9, 
+   3.783808163823765*^9}, {3.783808702895773*^9, 3.783808770714045*^9}, {
+   3.783808815841222*^9, 3.783808822692938*^9}, {3.783809347972279*^9, 
+   3.7838094075794353`*^9}, {3.783809509951921*^9, 3.7838095308581543`*^9}, {
+   3.783811569333149*^9, 3.783811575149372*^9}, {3.783811626396826*^9, 
+   3.7838116540534573`*^9}, {3.783811870803481*^9, 3.7838118709838943`*^9}, {
+   3.7838119857493668`*^9, 3.7838119871401176`*^9}, {3.783812025138378*^9, 
+   3.783812029827793*^9}, {3.78381207353734*^9, 3.78381214004325*^9}, {
+   3.783812681811974*^9, 3.7838126842923927`*^9}, 3.783812758815008*^9, {
+   3.7838159544017963`*^9, 3.78381596239415*^9}, {3.783816521030875*^9, 
+   3.783816521475684*^9}, {3.783894872397093*^9, 3.783894912912117*^9}, {
+   3.7838954278608847`*^9, 3.783895453444354*^9}, {3.783895493993466*^9, 
+   3.783895494906233*^9}, {3.783896864884128*^9, 3.783896914422612*^9}, {
+   3.783896946563208*^9, 3.7838969552575493`*^9}, {3.783897742716381*^9, 
+   3.783897745585597*^9}, {3.783897895392221*^9, 3.783897897221946*^9}, {
+   3.783898069526804*^9, 3.7838980908041058`*^9}, {3.783898313655596*^9, 
+   3.783898314213458*^9}, {3.783899080338902*^9, 3.783899106375177*^9}, {
+   3.783899239477117*^9, 3.783899243286096*^9}, {3.7839023136790752`*^9, 
+   3.783902322709023*^9}, {3.783902360155196*^9, 3.783902379283222*^9}, {
+   3.78422468472407*^9, 3.7842246851202307`*^9}, 3.7842249000399027`*^9, {
+   3.7842250711774197`*^9, 3.784225072500875*^9}},
+ CellLabel->"In[22]:=",ExpressionUUID->"e648c25f-d9de-48a1-9d0b-bb0aa116e056"],
+
+Cell[BoxData[
+ RowBox[{"Table", "[", 
+  RowBox[{
+   RowBox[{"Count", "[", 
+    RowBox[{
+     RowBox[{"combo", " ", "/@", " ", "Perm10"}], ",", 
+     RowBox[{"u_", "/;", 
+      RowBox[{"u", "\[LessEqual]", "n"}]}]}], "]"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"n", ",", "1", ",", "10"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.7838122677286673`*^9, 3.783812284686863*^9}, {
+   3.783813210232646*^9, 3.78381321040611*^9}, {3.783895059302741*^9, 
+   3.783895079313416*^9}, {3.783895530191538*^9, 3.783895532739352*^9}, {
+   3.783899234198138*^9, 3.783899236342239*^9}, 3.78422468294506*^9, 
+   3.7842250814910717`*^9, 3.7842280610394907`*^9},
+ CellLabel->"In[23]:=",ExpressionUUID->"ad5ecf31-bdcd-4624-8b72-94fd49038062"],
+
+Cell["\<\
+The input below uses the faster method. The manipulate and the table are able \
+to be computed quickly. It\[CloseCurlyQuote]s much easier to use this method \
+for a dynamic analysis of permutations of 10 and its cycles. \
+\>", "Text",
+ CellChangeTimes->{{3.784230944872552*^9, 3.78423095159382*^9}, {
+  3.784231114344668*^9, 3.7842311475785093`*^9}, {3.784246879454463*^9, 
+  3.784246897482521*^9}, {3.784401900124241*^9, 
+  3.7844019003866*^9}},ExpressionUUID->"2b6a5227-03dc-4249-aeac-516a6ede5647"],
+
+Cell[BoxData[{
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"s", "=", 
+     RowBox[{"Select", "[", 
+      RowBox[{"i", ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"First", "[", "#", "]"}], "\[LessEqual]", "x"}], "&"}]}], 
+      "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"ip", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Map", "[", 
+        RowBox[{
+         RowBox[{"Count", "[", "n", "]"}], ",", "s", ",", 
+         RowBox[{"{", 
+          RowBox[{"-", "2"}], "}"}]}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"n", ",", "1", ",", "x"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Tp", "=", 
+     RowBox[{
+      RowBox[{"Transpose", "[", "ip", "]"}], "!"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Total", "[", 
+     RowBox[{
+      RowBox[{"10", "!"}], "/", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"Times", "@@@", "s"}], ")"}], 
+        RowBox[{"(", 
+         RowBox[{"Times", "@@@", "Tp"}], ")"}]}], ")"}]}], "]"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"x", ",", "5", ",", "\"\<Maxmium cycle length\>\""}], "}"}], 
+     ",", "1", ",", "10", ",", "1"}], "}"}], ",", 
+   RowBox[{
+   "FrameLabel", "\[Rule]", " ", "\"\<Number of Permutations of 10\>\""}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Table", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"s", "=", 
+     RowBox[{"Select", "[", 
+      RowBox[{"i", ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"First", "[", "#", "]"}], "\[LessEqual]", "x"}], "&"}]}], 
+      "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"ip", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Map", "[", 
+        RowBox[{
+         RowBox[{"Count", "[", "n", "]"}], ",", "s", ",", 
+         RowBox[{"{", 
+          RowBox[{"-", "2"}], "}"}]}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"n", ",", "1", ",", "x"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Tp", "=", 
+     RowBox[{
+      RowBox[{"Transpose", "[", "ip", "]"}], "!"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Total", "[", 
+     RowBox[{
+      RowBox[{"10", "!"}], "/", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"Times", "@@@", "s"}], ")"}], 
+        RowBox[{"(", 
+         RowBox[{"Times", "@@@", "Tp"}], ")"}]}], ")"}]}], "]"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{"x", ",", "1", ",", "10"}], "}"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.783807534956712*^9, 3.783807539084095*^9}, {
+   3.7838077460408487`*^9, 3.783807757961803*^9}, {3.783807792265616*^9, 
+   3.783807821156864*^9}, {3.783808255721979*^9, 3.783808326418652*^9}, {
+   3.7838085260519753`*^9, 3.7838085660996113`*^9}, {3.783808607392261*^9, 
+   3.783808627161254*^9}, {3.783809838626985*^9, 3.783809843895913*^9}, {
+   3.783813073989511*^9, 3.783813141503821*^9}, {3.783813188532102*^9, 
+   3.783813189497817*^9}, {3.7838951031445093`*^9, 3.783895121853713*^9}, {
+   3.783896193212949*^9, 3.78389621042986*^9}, {3.7838990666155443`*^9, 
+   3.783899173081195*^9}, {3.7839022851991177`*^9, 3.783902307049852*^9}, {
+   3.7839023712187843`*^9, 3.783902381736458*^9}, {3.784224694227474*^9, 
+   3.784224734180448*^9}, {3.784225131360313*^9, 3.784225168456675*^9}, {
+   3.784225202580832*^9, 3.784225206223373*^9}, {3.784225330760879*^9, 
+   3.784225364063558*^9}, {3.784225404977744*^9, 3.784225406475346*^9}, 
+   3.784226139064612*^9, {3.784226378886916*^9, 3.784226384161022*^9}, {
+   3.784227049575941*^9, 3.7842270540433693`*^9}, {3.784227842558539*^9, 
+   3.784227886420575*^9}, 3.784230935979495*^9},
+ CellLabel->"In[24]:=",ExpressionUUID->"1b3635b4-4305-4e57-b3fa-3e341120bf62"],
+
+Cell["\<\
+The two inputs below describe the cycles of 10 in table form. The static \
+table shows each cycle type that can exist in permutations of 10 and the \
+amount of permutations with that cycle type. The percentage column shows the \
+percent of that cycle type with respect to the amount of cycles of the \
+maximum length allowed. The dynamic table shows the same data except it \
+shortens for analysis of smaller cycles and their percentages. Important note \
+is that the percentage in the dynamic input is not percentage of the cycle \
+type within permutations of 10, but percentage within the displayed cycles. \
+Also, interestingly, the {10} cycle type ({10,1,2,3,4,5,6,7,8,9} is an \
+example of the permutation) happens exactly 1/10 of the time. \
+\>", "Text",
+ CellChangeTimes->{{3.784247097598844*^9, 3.784247115449523*^9}, {
+  3.784247159809952*^9, 3.784247164864072*^9}, {3.7842473441840143`*^9, 
+  3.784247422622353*^9}, {3.784247458986027*^9, 3.784247520941194*^9}, {
+  3.784247562891403*^9, 3.7842477108885403`*^9}, {3.784247783524664*^9, 
+  3.7842478398750877`*^9}, {3.7842551026440887`*^9, 
+  3.7842551591568336`*^9}},ExpressionUUID->"c4f34cbe-37e5-422f-ada4-\
+fa012c0cf346"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"ip", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"Map", "[", 
+      RowBox[{
+       RowBox[{"Count", "[", "n", "]"}], ",", "i", ",", 
+       RowBox[{"{", 
+        RowBox[{"-", "2"}], "}"}]}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"n", ",", "1", ",", "10"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Tp", "=", 
+   RowBox[{
+    RowBox[{"Transpose", "[", "ip", "]"}], "!"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"PermuT", "=", 
+   RowBox[{
+    RowBox[{"10", "!"}], "/", 
+    RowBox[{"(", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Times", "@@@", "i"}], ")"}], 
+      RowBox[{"(", 
+       RowBox[{"Times", "@@@", "Tp"}], ")"}]}], ")"}]}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Multicolumn", "[", 
+  RowBox[{
+   RowBox[{"Join", "[", 
+    RowBox[{
+     RowBox[{"Append", "[", 
+      RowBox[{
+       RowBox[{"Prepend", "[", 
+        RowBox[{"i", ",", "\"\<Cycle Type\>\""}], "]"}], ",", 
+       "\"\<Total\>\""}], "]"}], ",", 
+     RowBox[{"Append", "[", 
+      RowBox[{
+       RowBox[{"Prepend", "[", 
+        RowBox[{"PermuT", ",", "\"\<Ammount\>\""}], "]"}], ",", 
+       RowBox[{"Total", "[", "PermuT", "]"}]}], "]"}], ",", 
+     RowBox[{"Prepend", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"100", 
+         RowBox[{"PermuT", "/", 
+          RowBox[{"Total", "[", "PermuT", "]"}]}]}], "//", "N"}], ",", 
+       "\"\<Percentage\>\""}], "]"}]}], "]"}], ",", "3"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.783814821951024*^9, 3.783814840147161*^9}, {
+   3.783814904621459*^9, 3.783814907397732*^9}, {3.783814941593898*^9, 
+   3.7838150369535093`*^9}, {3.7838152159060593`*^9, 3.783815340199616*^9}, {
+   3.7838156426759157`*^9, 3.783815643023591*^9}, {3.783815851463643*^9, 
+   3.783815857788679*^9}, {3.783815987673624*^9, 3.7838159927743597`*^9}, {
+   3.783896228166581*^9, 3.783896230185075*^9}, {3.7838962978198843`*^9, 
+   3.783896299409649*^9}, {3.783899264438655*^9, 3.783899293298768*^9}, {
+   3.7839002358988123`*^9, 3.7839002729923487`*^9}, {3.78422645860667*^9, 
+   3.784226511330162*^9}, {3.784226566774806*^9, 3.7842265874609413`*^9}, {
+   3.784227061422707*^9, 3.784227062344976*^9}, {3.7842271008375797`*^9, 
+   3.78422710695568*^9}, {3.784227161915873*^9, 3.7842271646668997`*^9}, {
+   3.784227822727528*^9, 3.784227834501185*^9}, {3.7842279345018473`*^9, 
+   3.784227935301083*^9}, {3.784228295117325*^9, 3.784228297004652*^9}, 
+   3.784228778729638*^9, {3.7842291446735983`*^9, 3.784229149359707*^9}},
+ CellLabel->"In[26]:=",ExpressionUUID->"da883d2a-56b8-4b84-bdac-80bd09a24408"],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"s", "=", 
+     RowBox[{"Select", "[", 
+      RowBox[{"i", ",", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"First", "[", "#", "]"}], "\[LessEqual]", "x"}], "&"}]}], 
+      "]"}]}], ";", "\[IndentingNewLine]", 
+    RowBox[{"ip", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Map", "[", 
+        RowBox[{
+         RowBox[{"Count", "[", "n", "]"}], ",", "s", ",", 
+         RowBox[{"{", 
+          RowBox[{"-", "2"}], "}"}]}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"n", ",", "1", ",", "x"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"it", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"Map", "[", 
+        RowBox[{
+         RowBox[{"Count", "[", "n", "]"}], ",", "i", ",", 
+         RowBox[{"{", 
+          RowBox[{"-", "2"}], "}"}]}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"n", ",", "1", ",", "10"}], "}"}]}], "]"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Tp", "=", 
+     RowBox[{
+      RowBox[{"Transpose", "[", "ip", "]"}], "!"}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"PermuT", "=", 
+     RowBox[{
+      RowBox[{"10", "!"}], "/", 
+      RowBox[{"(", 
+       RowBox[{
+        RowBox[{"(", 
+         RowBox[{"Times", "@@@", "s"}], ")"}], 
+        RowBox[{"(", 
+         RowBox[{"Times", "@@@", "Tp"}], ")"}]}], ")"}]}]}], ";", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Multicolumn", "[", 
+     RowBox[{
+      RowBox[{"Join", "[", 
+       RowBox[{
+        RowBox[{"Append", "[", 
+         RowBox[{
+          RowBox[{"Prepend", "[", 
+           RowBox[{"s", ",", "\"\<Cycle Type\>\""}], "]"}], ",", 
+          "\"\<Total\>\""}], "]"}], ",", 
+        RowBox[{"Append", "[", 
+         RowBox[{
+          RowBox[{"Prepend", "[", 
+           RowBox[{"PermuT", ",", "\"\<Ammount\>\""}], "]"}], ",", 
+          RowBox[{"Total", "[", "PermuT", "]"}]}], "]"}], ",", 
+        RowBox[{"Prepend", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"100", 
+            RowBox[{"PermuT", "/", 
+             RowBox[{"Total", "[", "PermuT", "]"}]}]}], "//", "N"}], ",", 
+          "\"\<Percentage\>\""}], "]"}]}], "]"}], ",", "3"}], "]"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"x", ",", "5", ",", "\"\<Maxmium cycle length\>\""}], "}"}], 
+     ",", "1", ",", "10", ",", "1"}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.783899665956895*^9, 3.783899780021449*^9}, {
+  3.783900023682598*^9, 3.78390005761462*^9}, {3.783900089542239*^9, 
+  3.783900161228385*^9}, {3.783900306882112*^9, 3.7839003132438393`*^9}, {
+  3.7839117811032457`*^9, 3.783911841992609*^9}, {3.7842271252836657`*^9, 
+  3.784227198633305*^9}, {3.784227249692882*^9, 3.784227250612197*^9}, {
+  3.78422790155564*^9, 3.784227921207947*^9}, {3.784228790719952*^9, 
+  3.784228804639289*^9}, {3.784229035460992*^9, 3.7842291200026608`*^9}, {
+  3.784245891944913*^9, 3.784245896532195*^9}, {3.784245962702052*^9, 
+  3.784245978222721*^9}, {3.784246010647962*^9, 3.784246109249875*^9}, {
+  3.7842472314512043`*^9, 3.784247234023411*^9}},
+ CellLabel->"In[30]:=",ExpressionUUID->"d83028f1-5cbe-431b-bd53-b6a1ef6c1caa"],
+
+Cell["\<\
+The manipulate below generalizes the faster method to any permutations of any \
+maximum cycle length. Currently the maximum permutations set in the \
+manipulate is 50. The code still works at the larger values but significantly \
+slower. \
+\>", "Text",
+ CellChangeTimes->{{3.784255192710215*^9, 3.784255256460601*^9}, {
+  3.784255467011098*^9, 3.7842555032951612`*^9}, {3.7842562877979517`*^9, 
+  3.784256310962901*^9}, {3.784401698321177*^9, 
+  3.78440169904954*^9}},ExpressionUUID->"8694aa76-debc-4995-af4e-\
+1bc0b0588db6"],
+
+Cell[BoxData[
+ RowBox[{"Manipulate", "[", "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"ControlActive", "[", 
+    RowBox[{"\"\<Calculating\>\"", ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"iF", "=", 
+       RowBox[{"IntegerPartitions", "[", "y", "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"itF", "=", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"Map", "[", 
+          RowBox[{
+           RowBox[{"Count", "[", "n", "]"}], ",", "iF", ",", 
+           RowBox[{"{", 
+            RowBox[{"-", "2"}], "}"}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "y"}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"TtF", "=", 
+       RowBox[{
+        RowBox[{"Transpose", "[", "itF", "]"}], "!"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"sF", "=", 
+       RowBox[{"Select", "[", 
+        RowBox[{"iF", ",", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"First", "[", "#", "]"}], "\[LessEqual]", "x"}], "&"}]}], 
+        "]"}]}], ";", "\[IndentingNewLine]", 
+      RowBox[{"ipF", "=", 
+       RowBox[{"Table", "[", 
+        RowBox[{
+         RowBox[{"Map", "[", 
+          RowBox[{
+           RowBox[{"Count", "[", "n", "]"}], ",", "sF", ",", 
+           RowBox[{"{", 
+            RowBox[{"-", "2"}], "}"}]}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"n", ",", "1", ",", "x"}], "}"}]}], "]"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"TpF", "=", 
+       RowBox[{
+        RowBox[{"Transpose", "[", "ipF", "]"}], "!"}]}], ";", 
+      "\[IndentingNewLine]", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"Total", "[", 
+         RowBox[{
+          RowBox[{"y", "!"}], "/", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"Times", "@@@", "sF"}], ")"}], 
+            RowBox[{"(", 
+             RowBox[{"Times", "@@@", "TpF"}], ")"}]}], ")"}]}], "]"}], ",", 
+        RowBox[{"Total", "[", 
+         RowBox[{
+          RowBox[{"y", "!"}], "/", 
+          RowBox[{"(", 
+           RowBox[{
+            RowBox[{"(", 
+             RowBox[{"Times", "@@@", "iF"}], ")"}], 
+            RowBox[{"(", 
+             RowBox[{"Times", "@@@", "TtF"}], ")"}]}], ")"}]}], "]"}], ",", 
+        RowBox[{
+         RowBox[{"100", 
+          RowBox[{
+           RowBox[{"Total", "[", 
+            RowBox[{
+             RowBox[{"y", "!"}], "/", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"Times", "@@@", "sF"}], ")"}], 
+               RowBox[{"(", 
+                RowBox[{"Times", "@@@", "TpF"}], ")"}]}], ")"}]}], "]"}], "/", 
+           RowBox[{"Total", "[", 
+            RowBox[{
+             RowBox[{"y", "!"}], "/", 
+             RowBox[{"(", 
+              RowBox[{
+               RowBox[{"(", 
+                RowBox[{"Times", "@@@", "iF"}], ")"}], 
+               RowBox[{"(", 
+                RowBox[{"Times", "@@@", "TtF"}], ")"}]}], ")"}]}], "]"}]}]}], 
+         "//", "N"}]}], "}"}]}]}], "]"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"x", ",", "5", ",", "\"\<Maxmium cycle length\>\""}], "}"}], 
+     ",", "1", ",", "50", ",", "1"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"y", ",", "10", ",", "\"\<Permutations of\>\""}], "}"}], ",", 
+     "1", ",", "50", ",", "1"}], "}"}], ",", 
+   RowBox[{"SaveDefinitions", "\[Rule]", "True"}], ",", 
+   RowBox[{
+   "FrameLabel", "\[Rule]", 
+    "\"\<{Number of Cycles ,Total Permutations, Percentage}\>\""}]}], 
+  "]"}]], "Input",
+ CellChangeTimes->{{3.783901829580377*^9, 3.783901970649975*^9}, {
+   3.783902017057537*^9, 3.7839020673059807`*^9}, {3.7839021183331833`*^9, 
+   3.783902119176149*^9}, {3.7839021692879143`*^9, 3.7839021953672523`*^9}, {
+   3.783911758234209*^9, 3.78391177191415*^9}, {3.784229325789032*^9, 
+   3.784229397747056*^9}, {3.784231188932563*^9, 3.7842311927764482`*^9}, {
+   3.784231263568779*^9, 3.784231266651075*^9}, {3.7842314584857607`*^9, 
+   3.784231476177746*^9}, 3.784243906526614*^9, {3.784244070190287*^9, 
+   3.7842440727310953`*^9}, 3.784244697005148*^9, {3.784244797761685*^9, 
+   3.7842448365782146`*^9}, {3.784247021690548*^9, 3.784247022308054*^9}, {
+   3.784255422936414*^9, 3.784255445523077*^9}, {3.784255507370327*^9, 
+   3.7842555110543423`*^9}, {3.784255631234437*^9, 3.7842556920680304`*^9}, {
+   3.784256131684161*^9, 3.784256157963633*^9}, {3.7842562019911633`*^9, 
+   3.78425625108523*^9}, {3.784401596403555*^9, 3.784401596950115*^9}, {
+   3.7844016553425293`*^9, 3.784401655746361*^9}},
+ CellLabel->"In[31]:=",ExpressionUUID->"9c81148a-6b2e-4f4a-9461-a82acf4efa7a"],
+
+Cell["\<\
+Credit: http://datagenetics.com/blog/december42014/index.html\
+\>", "Subsubsection",
+ CellChangeTimes->{{3.784137668082224*^9, 
+  3.7841376716454372`*^9}},ExpressionUUID->"5151921e-d0b7-4d28-87ed-\
+293c2ee6094c"]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1680, 922},
+WindowMargins->{{0, Automatic}, {Automatic, 0}},
+Magnification:>1.25 Inherited,
+FrontEndVersion->"12.0 for Mac OS X x86 (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 225, 5, 200, "Title",ExpressionUUID->"b6c55467-5524-4837-a649-51a63d7db1d7"],
+Cell[CellGroupData[{
+Cell[830, 31, 231, 4, 86, "Chapter",ExpressionUUID->"d3d12f41-d6e0-4196-b756-4dd3c8c2c5b7"],
+Cell[1064, 37, 918, 15, 102, "Text",ExpressionUUID->"e271fe11-ba92-45df-bdd9-1404205cb322"],
+Cell[1985, 54, 270, 5, 64, "Input",ExpressionUUID->"5fa06b41-f06a-4021-8316-3371a722993f"],
+Cell[2258, 61, 865, 21, 78, "Text",ExpressionUUID->"21db802b-e6d4-444f-b733-f4cfb85d469c"],
+Cell[3126, 84, 687, 16, 90, "Input",ExpressionUUID->"50d8612a-ad40-4067-b579-a6a11b31ccd7"],
+Cell[3816, 102, 1075, 17, 131, "Text",ExpressionUUID->"b191de58-37bc-48d7-a9c5-001b24ac63c3"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4928, 124, 166, 3, 86, "Chapter",ExpressionUUID->"34014d2d-cb9f-4c98-982d-1631e6d8a9fd"],
+Cell[5097, 129, 1822, 44, 272, "Input",ExpressionUUID->"41ef87c5-440f-4f57-9d27-184d62b9c773"],
+Cell[6922, 175, 123, 2, 37, "Input",ExpressionUUID->"233b6719-0260-4445-9df7-d462cfd948c7"],
+Cell[7048, 179, 1415, 25, 164, "Text",ExpressionUUID->"1af69812-b8fd-429d-bfbc-7ed99f18a6de"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8500, 209, 245, 4, 86, "Chapter",ExpressionUUID->"f8b59f90-a3c9-40f2-9de0-11fab9f34aaa"],
+Cell[8748, 215, 2374, 71, 272, "Input",ExpressionUUID->"2b05e857-ab50-40a3-9de5-70a5e06720c7"],
+Cell[11125, 288, 571, 10, 102, "Text",ExpressionUUID->"3de9150a-24eb-48d0-bf86-a808b6994adc"],
+Cell[11699, 300, 1342, 36, 168, "Input",ExpressionUUID->"b317a245-33f0-4de4-b224-8ab110c7e788"],
+Cell[13044, 338, 1075, 28, 52, "Text",ExpressionUUID->"333ec711-9785-4ec8-b183-370ddb62a32f"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14156, 371, 192, 3, 86, "Chapter",ExpressionUUID->"6237f3f4-8812-4f88-a1a9-cdaa5da66f30"],
+Cell[14351, 376, 464, 8, 90, "Input",ExpressionUUID->"2aaf367d-39ad-44ed-b9f9-8e3bf5c5c052"],
+Cell[14818, 386, 613, 11, 102, "Text",ExpressionUUID->"9ef92831-3254-4a60-a141-220d9b64683e"],
+Cell[15434, 399, 2580, 45, 64, "Input",ExpressionUUID->"e648c25f-d9de-48a1-9d0b-bb0aa116e056"],
+Cell[18017, 446, 726, 15, 37, "Input",ExpressionUUID->"ad5ecf31-bdcd-4624-8b72-94fd49038062"],
+Cell[18746, 463, 511, 8, 73, "Text",ExpressionUUID->"2b6a5227-03dc-4249-aeac-516a6ede5647"],
+Cell[19260, 473, 3814, 97, 324, "Input",ExpressionUUID->"1b3635b4-4305-4e57-b3fa-3e341120bf62"],
+Cell[23077, 572, 1194, 18, 131, "Text",ExpressionUUID->"c4f34cbe-37e5-422f-ada4-fa012c0cf346"],
+Cell[24274, 592, 2628, 64, 142, "Input",ExpressionUUID->"da883d2a-56b8-4b84-bdac-80bd09a24408"],
+Cell[26905, 658, 3247, 84, 246, "Input",ExpressionUUID->"d83028f1-5cbe-431b-bd53-b6a1ef6c1caa"],
+Cell[30155, 744, 535, 10, 73, "Text",ExpressionUUID->"8694aa76-debc-4995-af4e-1bc0b0588db6"],
+Cell[30693, 756, 4687, 117, 324, "Input",ExpressionUUID->"9c81148a-6b2e-4f4a-9461-a82acf4efa7a"],
+Cell[35383, 875, 222, 5, 56, "Subsubsection",ExpressionUUID->"5151921e-d0b7-4d28-87ed-293c2ee6094c"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
